@@ -1,44 +1,35 @@
-"use client";
-
+import FormularioCategoria from "@/components/FormularioCategoria";
+import { serverApi } from "@/services/api/api.server";
 import { Categoria } from "@/types";
-import { useState, useEffect } from "react";
 
-export default function Home() {
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export default async function Home() {
+  let categorias: Categoria[] = [];
+  let error: string | null = null;
 
-  useEffect(() => {
-    const fetchCategorias = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/categorias");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data: Categoria[] = await response.json();
-        setCategorias(data);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCategorias();
-  }, []);
-
-  if (loading) return <p>Loading users...</p>;
-  if (error) return <p>Error: {error}</p>;
+  try {
+    // Chama a camada "Model" para buscar os dados
+    categorias = await serverApi.categorias.list();
+  } catch (err) {
+    if (err instanceof Error) error = err.message;
+  }
 
   return (
-    <div>
-      <h1>Categorias</h1>
+    <main className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Gerenciador Financeiro</h1>
+
+      <h2 className="text-xl">Adicionar Nova Categoria</h2>
+
+      <FormularioCategoria />
+
+      <hr className="my-6" />
+
+      <h2 className="text-xl">Categorias Existentes</h2>
+      {error && <p className="text-red-500">{error}</p>}
       <ul>
         {categorias.map((categoria) => (
           <li key={categoria.id}>{categoria.nome}</li>
         ))}
       </ul>
-    </div>
+    </main>
   );
 }
