@@ -5,7 +5,7 @@ const DJANGO_API_URL = "http://localhost:8000/api/categorias";
 
 export async function GET() {
   try {
-    const response = await fetch(`${DJANGO_API_URL}/`, {
+    const response = await fetch(`${DJANGO_API_URL}`, {
       cache: "no-store",
     });
 
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const response = await fetch(`${DJANGO_API_URL}/`, {
+    const response = await fetch(`${DJANGO_API_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

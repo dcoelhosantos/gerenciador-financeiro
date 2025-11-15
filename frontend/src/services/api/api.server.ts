@@ -7,7 +7,7 @@ export const serverApi = {
     list: async (): Promise<Categoria[]> => {
       console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
 
-      const response = await fetch(`http://localhost:8000/api/categorias/`, {
+      const response = await fetch(`http://localhost:8000/api/categorias`, {
         cache: "no-store",
       });
 
