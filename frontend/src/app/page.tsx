@@ -1,35 +1,97 @@
-import FormularioCategoria from "@/components/FormularioCategoria";
 import { serverApi } from "@/services/api/api.server";
-import { Categoria } from "@/types";
 
 export default async function Home() {
-  let categorias: Categoria[] = [];
+  let saldo: number = 0;
+  let saldo_futuro: number = 0;
+  let totalFaturaDaniel: number = 0;
+  let totalGastosPrevistos: number = 0;
   let error: string | null = null;
 
   try {
-    // Chama a camada "Model" para buscar os dados
-    categorias = await serverApi.categorias.list();
+    const [saldoData, faturaData, gastoData] = await Promise.all([
+      serverApi.saldo.get(),
+      serverApi.transacoes.getValorTotal(1),
+      serverApi.transacoes.getValorTotal(6),
+    ]);
+    saldo = saldoData;
+    totalFaturaDaniel = faturaData;
+    totalGastosPrevistos = gastoData;
   } catch (err) {
     if (err instanceof Error) error = err.message;
   }
 
+  saldo_futuro = saldo - (totalFaturaDaniel + totalGastosPrevistos);
+
+  // return (
+  //   <main className="p-8 bg-white">
+  //     <div className="text-center">
+  //       <h1 className="text-2xl font-bold mb-8 text-emerald-900">
+  //         Gerenciador Financeiro - Dashboard
+  //       </h1>
+  //     </div>
+
+  //     <div>
+  //       {error && (
+  //         <p className="text-red-500 bg-red-100 p-4 rounded my-4">
+  //           Erro ao carregar o resumo: {error}
+  //         </p>
+  //       )}
+  //       <div className="grid grid-cols-4 gap-4 mb-8">
+  //         <div className="border border-emerald-200 p-4 rounded bg-emerald-50 text-emerald-900">
+  //           <h3 className="font-bold">Saldo atual:</h3>
+  //           <p className="text-2xl">R$ {saldo.toFixed(2)}</p>
+  //         </div>
+  //         <div className="border border-emerald-200 p-4 rounded bg-emerald-50 text-emerald-900">
+  //           <h3 className="font-bold">Fatura:</h3>
+  //           <p className="text-2xl">R$ {totalFaturaDaniel.toFixed(2)}</p>
+  //         </div>
+  //         <div className="border border-emerald-200 p-4 rounded bg-emerald-50 text-emerald-900">
+  //           <h3 className="font-bold">Gastos previstos:</h3>
+  //           <p className="text-2xl">R$ {totalGastosPrevistos.toFixed(2)}</p>
+  //         </div>
+  //         {/* Destaque para o card principal */}
+  //         <div className="border border-emerald-600 p-4 rounded bg-emerald-500 text-white">
+  //           <h3 className="font-bold">Saldo previsto</h3>
+  //           <p className="text-2xl">R$ {saldo_futuro.toFixed(2)}</p>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </main>
+  // );
+
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Gerenciador Financeiro</h1>
+    <main className="p-8 bg-gray-900 text-gray-200 min-h-screen">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold mb-8 text-white">
+          Gerenciador Financeiro - Dashboard
+        </h1>
+      </div>
 
-      <h2 className="text-xl">Adicionar Nova Categoria</h2>
-
-      <FormularioCategoria />
-
-      <hr className="my-6" />
-
-      <h2 className="text-xl">Categorias Existentes</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <ul>
-        {categorias.map((categoria) => (
-          <li key={categoria.id}>{categoria.nome}</li>
-        ))}
-      </ul>
+      <div>
+        {error && (
+          <p className="text-red-500 bg-red-100 p-4 rounded my-4">
+            Erro ao carregar o resumo: {error}
+          </p>
+        )}
+        <div className="grid grid-cols-4 gap-4 mb-8">
+          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+            <h3 className="font-bold">Saldo atual:</h3>
+            <p className="text-2xl">R$ {saldo.toFixed(2)}</p>
+          </div>
+          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+            <h3 className="font-bold">Fatura:</h3>
+            <p className="text-2xl">R$ {totalFaturaDaniel.toFixed(2)}</p>
+          </div>
+          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+            <h3 className="font-bold">Gastos previstos:</h3>
+            <p className="text-2xl">R$ {totalGastosPrevistos.toFixed(2)}</p>
+          </div>
+          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+            <h3 className="font-bold">Saldo previsto</h3>
+            <p className="text-2xl">R$ {saldo_futuro.toFixed(2)}</p>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
