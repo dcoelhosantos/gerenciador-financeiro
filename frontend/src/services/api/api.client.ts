@@ -16,8 +16,37 @@ export const clientApi = {
       }
       return response.json();
     },
+  },
 
-    // (Você poderia ter um 'list' aqui também, se precisasse
-    //  buscar do lado do cliente)
+  transacoes: {
+    remove: async (id: number) => {
+      console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch(`api/faturas?id=${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao remover transação via BFF");
+      }
+
+      return;
+    },
+
+    removePorCategoria: async (categoria_id: number) => {
+      console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch("api/faturas/delete_pela_categoria", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: categoria_id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao remover transações via BFF");
+      }
+
+      return;
+    },
   },
 };

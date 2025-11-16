@@ -37,6 +37,21 @@ export const serverApi = {
   },
 
   transacoes: {
+    list: async (): Promise<Transacao[]> => {
+      console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
+
+      const response = await fetch(
+        `${API_URL}/transacoes?exclude_categoria_id=6`,
+        { cache: "no-store" }
+      );
+
+      if (!response.ok) {
+        throw new Error("Falha ao buscar faturas do Django");
+      }
+
+      return response.json();
+    },
+
     getValorTotal: async (categoria_id: number): Promise<number> => {
       console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
 

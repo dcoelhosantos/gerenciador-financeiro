@@ -1,13 +1,12 @@
 # backend/core/api.py
-from ninja import NinjaAPI, Router
 from typing import List
-from .models import Transacao, Categoria, Saldo
-from .schema import (
-    TransacaoSchema, TransacaoCreateSchema, 
-    CategoriaSchema, 
-    SaldoSchema, SaldoUpdateSchema
-)
+
 from django.shortcuts import get_object_or_404
+from ninja import NinjaAPI, Router, Schema
+
+from .models import Categoria, Saldo, Transacao
+from .schema import (CategoriaSchema, ClearCategorySchema, SaldoSchema,
+                     SaldoUpdateSchema, TransacaoCreateSchema, TransacaoSchema)
 
 api = NinjaAPI()
 
@@ -50,16 +49,37 @@ def criar_categoria(request, payload: CategoriaSchema):
 def criar_transacao(request, payload: TransacaoCreateSchema):
     return Transacao.objects.create(**payload.dict())
 
+@api.post("/transacoes/batch", response=List[TransacaoSchema])
+def criar_transacoes_em_lote(request, payload: List[TransacaoCreateSchema]):
+    transacoes_criadas = []
+    for item in payload:
+        transacao = Transacao.objects.create(**item.dict())
+        transacoes_criadas.append(transacao)
+    return transacoes_criadas
+
 @api.get("/transacoes", response=List[TransacaoSchema])
-def listar_transacoes(request, categoria_id: int = None):
+def listar_transacoes(request, categoria_id: int = None, exclude_categoria_id: int = None):
+    transacoes = Transacao.objects.all()
+
     if categoria_id:
-        # (Substitui verFatura de uma pessoa, ou verGastosPrevistos)
-        return Transacao.objects.filter(categoria_id=categoria_id)
-    return Transacao.objects.all() # (Para ver tudo)
+        transacoes = transacoes.filter(categoria_id=categoria_id)
+        return transacoes
+    
+    if exclude_categoria_id:
+        transacoes = transacoes.exclude(categoria_id=exclude_categoria_id)
+       
+    return transacoes
 
 @api.delete("/transacoes/{int:transacao_id}", response={204: None})
 def apagar_transacao(request, transacao_id: int):
     # Apaga uma transação específica. (Substitui quitarDivida/quitarGasto)
     transacao = get_object_or_404(Transacao, id=transacao_id)
     transacao.delete()
+    return 204
+
+# Apaga TODAS as transações de uma categoria específica. (Substitui quitarDividaTotal)
+@api.post("/transacoes/clear-by-category", response={204: None})
+def limpar_categoria(request, payload: ClearCategorySchema):
+    transacoes = Transacao.objects.filter(categoria_id=payload.categoria_id)
+    transacoes.delete()
     return 204

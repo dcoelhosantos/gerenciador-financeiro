@@ -22,43 +22,6 @@ export default async function Home() {
 
   saldo_futuro = saldo - (totalFaturaDaniel + totalGastosPrevistos);
 
-  // return (
-  //   <main className="p-8 bg-white">
-  //     <div className="text-center">
-  //       <h1 className="text-2xl font-bold mb-8 text-emerald-900">
-  //         Gerenciador Financeiro - Dashboard
-  //       </h1>
-  //     </div>
-
-  //     <div>
-  //       {error && (
-  //         <p className="text-red-500 bg-red-100 p-4 rounded my-4">
-  //           Erro ao carregar o resumo: {error}
-  //         </p>
-  //       )}
-  //       <div className="grid grid-cols-4 gap-4 mb-8">
-  //         <div className="border border-emerald-200 p-4 rounded bg-emerald-50 text-emerald-900">
-  //           <h3 className="font-bold">Saldo atual:</h3>
-  //           <p className="text-2xl">R$ {saldo.toFixed(2)}</p>
-  //         </div>
-  //         <div className="border border-emerald-200 p-4 rounded bg-emerald-50 text-emerald-900">
-  //           <h3 className="font-bold">Fatura:</h3>
-  //           <p className="text-2xl">R$ {totalFaturaDaniel.toFixed(2)}</p>
-  //         </div>
-  //         <div className="border border-emerald-200 p-4 rounded bg-emerald-50 text-emerald-900">
-  //           <h3 className="font-bold">Gastos previstos:</h3>
-  //           <p className="text-2xl">R$ {totalGastosPrevistos.toFixed(2)}</p>
-  //         </div>
-  //         {/* Destaque para o card principal */}
-  //         <div className="border border-emerald-600 p-4 rounded bg-emerald-500 text-white">
-  //           <h3 className="font-bold">Saldo previsto</h3>
-  //           <p className="text-2xl">R$ {saldo_futuro.toFixed(2)}</p>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </main>
-  // );
-
   return (
     <main className="p-8 bg-gray-900 text-gray-200 min-h-screen">
       <div className="text-center">
@@ -74,19 +37,19 @@ export default async function Home() {
           </p>
         )}
         <div className="grid grid-cols-4 gap-4 mb-8">
-          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+          <div className="border border-gray-500 p-4 rounded bg-gray-800 text-gray-200">
             <h3 className="font-bold">Saldo atual:</h3>
             <p className="text-2xl">R$ {saldo.toFixed(2)}</p>
           </div>
-          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+          <div className="border border-gray-500 p-4 rounded bg-gray-800 text-gray-200">
             <h3 className="font-bold">Fatura:</h3>
             <p className="text-2xl">R$ {totalFaturaDaniel.toFixed(2)}</p>
           </div>
-          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+          <div className="border border-gray-500 p-4 rounded bg-gray-800 text-gray-200">
             <h3 className="font-bold">Gastos previstos:</h3>
             <p className="text-2xl">R$ {totalGastosPrevistos.toFixed(2)}</p>
           </div>
-          <div className="border border-gray-700 p-4 rounded bg-gray-800 text-gray-200">
+          <div className="border border-green-700 p-4 rounded bg-gray-700 text-green-500">
             <h3 className="font-bold">Saldo previsto</h3>
             <p className="text-2xl">R$ {saldo_futuro.toFixed(2)}</p>
           </div>

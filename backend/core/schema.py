@@ -1,6 +1,8 @@
 # backend/core/schema.py
 from ninja import ModelSchema, Schema
-from .models import Transacao, Categoria, Saldo
+
+from .models import Categoria, Saldo, Transacao
+
 # from typing import Optional
 
 # --- Categoria ---
@@ -31,4 +33,7 @@ class TransacaoSchema(ModelSchema):
 class TransacaoCreateSchema(Schema):
     descricao: str
     valor: float
+    categoria_id: int
+
+class ClearCategorySchema(Schema):
     categoria_id: int

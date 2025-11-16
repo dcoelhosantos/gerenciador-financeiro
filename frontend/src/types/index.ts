@@ -15,3 +15,12 @@ export interface Transacao {
   categoria: Categoria;
   criado_em: Date;
 }
+
+export interface InfoCategoria {
+  transacoes: Transacao[];
+  total: number;
+}
+
+export interface FaturasAgrupadas {
+  [nomeCategoria: string]: InfoCategoria;
+}
