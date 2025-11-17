@@ -1,3 +1,4 @@
+import ListaDeFaturas from "@/components/ListaDeFaturas";
 import { serverApi } from "@/services/api/api.server";
 import { FaturasAgrupadas, Transacao } from "@/types";
 
@@ -51,34 +52,7 @@ export default async function Faturas() {
         </p>
       </div>
 
-      <div className="space-y-6">
-        {Object.keys(faturasAgrupadas).map((nomeCategoria) => (
-          <div
-            key={nomeCategoria}
-            className="border border-gray-700 rounded p-4"
-          >
-            <h2 className="text-xl font-bold mb-3 text-green-500">
-              --- FATURA DE {nomeCategoria.toUpperCase()} ---
-            </h2>
-
-            <ul className="space-py-1">
-              {faturasAgrupadas[nomeCategoria].transacoes.map((fatura) => (
-                <li key={fatura.id} className="flex justify-between">
-                  <span>{fatura.descricao}</span>
-                  <span>R$ {parseFloat(fatura.valor).toFixed(2)}</span>
-                </li>
-              ))}
-            </ul>
-
-            <hr className="my-3 border-gray-600" />
-
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total gasto:</span>
-              <span>R$ {faturasAgrupadas[nomeCategoria].total.toFixed(2)}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      <ListaDeFaturas faturasAgrupadas={faturasAgrupadas} />
     </main>
   );
 }

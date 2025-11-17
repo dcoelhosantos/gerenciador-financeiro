@@ -41,8 +41,7 @@ export const serverApi = {
       console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
 
       const response = await fetch(
-        `${API_URL}/transacoes?exclude_categoria_id=6`,
-        { cache: "no-store" }
+        `${API_URL}/transacoes?exclude_categoria_id=6`
       );
 
       if (!response.ok) {

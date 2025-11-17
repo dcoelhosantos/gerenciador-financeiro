@@ -1,5 +1,6 @@
 import { Transacao } from "@/types";
-import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 const DJANGO_API_URL = "http://localhost:8000/api/transacoes";
 
@@ -45,10 +46,9 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
+    const id = request.nextUrl.searchParams.get("id");
 
     if (!id) {
       return new NextResponse("ID da transação não fornecido", { status: 400 });
@@ -65,7 +65,9 @@ export async function DELETE(request: Request) {
       throw new Error(`Erro do Django: ${response.statusText}`);
     }
 
-    return NextResponse.json(null, { status: 204 });
+    revalidatePath("/faturas");
+    revalidatePath("/");
+    return new NextResponse(null, { status: 204 });
   } catch (err) {
     let message = "Erro interno do BFF";
     if (err instanceof Error) message = err.message;
