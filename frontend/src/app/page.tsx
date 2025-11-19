@@ -1,3 +1,4 @@
+import DashboardActions from "@/components/DashboardActions";
 import { serverApi } from "@/services/api/api.server";
 
 export default async function Home() {
@@ -30,6 +31,8 @@ export default async function Home() {
         </h1>
       </div>
 
+      <DashboardActions />
+
       <div>
         {error && (
           <p className="text-red-500 bg-red-100 p-4 rounded my-4">
@@ -49,7 +52,7 @@ export default async function Home() {
             <h3 className="font-bold">Gastos previstos:</h3>
             <p className="text-2xl">R$ {totalGastosPrevistos.toFixed(2)}</p>
           </div>
-          <div className="border border-green-700 p-4 rounded bg-gray-700 text-green-500">
+          <div className="border border-green-600 p-4 rounded bg-gray-700 text-green-400">
             <h3 className="font-bold">Saldo previsto</h3>
             <p className="text-2xl">R$ {saldo_futuro.toFixed(2)}</p>
           </div>

@@ -1,6 +1,23 @@
 import { Categoria, CreateTransacaoPayload, Transacao } from "@/types";
 
 export const clientApi = {
+  saldo: {
+    update: async (novoValor: number) => {
+      console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch("/api/saldo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ valor: novoValor }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao atualizar saldo via BFF");
+      }
+      return;
+    },
+  },
+
   categorias: {
     create: async (nome: string): Promise<Categoria> => {
       console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
@@ -51,6 +68,21 @@ export const clientApi = {
       return response.json();
     },
 
+    createGastosPadroes: async (transacoes: CreateTransacaoPayload[]) => {
+      console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch("/api/gastos/gastos_padroes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(transacoes),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao adicionar gastos padrões via BFF");
+      }
+      return;
+    },
+
     remove: async (id: number) => {
       console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
 
@@ -68,7 +100,7 @@ export const clientApi = {
     removeGastoPrevisto: async (id: number) => {
       console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
 
-      const response = await fetch(`api/gastos?id=${id}`, {
+      const response = await fetch(`/api/gastos?id=${id}`, {
         method: "DELETE",
       });
 
