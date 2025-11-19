@@ -33,6 +33,24 @@ export const clientApi = {
       }
       return response.json();
     },
+
+    createGastoPrevisto: async (
+      data: CreateTransacaoPayload
+    ): Promise<Transacao> => {
+      console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch("/api/gastos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao criar gasto previsto via BFF");
+      }
+      return response.json();
+    },
+
     remove: async (id: number) => {
       console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
 
@@ -42,6 +60,20 @@ export const clientApi = {
 
       if (!response.ok) {
         throw new Error("Falha ao remover transação via BFF");
+      }
+
+      return;
+    },
+
+    removeGastoPrevisto: async (id: number) => {
+      console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch(`api/gastos?id=${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao remover gasto previsto via BFF");
       }
 
       return;
@@ -58,6 +90,22 @@ export const clientApi = {
 
       if (!response.ok) {
         throw new Error("Falha ao remover transações via BFF");
+      }
+
+      return;
+    },
+
+    removeGastosPrevistos: async () => {
+      console.log("RODANDO MO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch("/api/gastos/limpar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: 6 }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao remover gastos previstos via BFF");
       }
 
       return;

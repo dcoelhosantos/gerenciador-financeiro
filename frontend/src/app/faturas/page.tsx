@@ -11,7 +11,7 @@ export default async function Faturas() {
   try {
     const [faturasData, categoriasData] = await Promise.all([
       serverApi.transacoes.list(),
-      serverApi.categorias.list(), // Essa função já existe no seu api.server.ts
+      serverApi.categorias.list(),
     ]);
 
     faturas = faturasData;

@@ -18,10 +18,12 @@ const transacaoSchema = z.object({
 
 interface FormularioTransacaoProps {
   categorias: Categoria[];
+  tipo?: "fatura" | "gastoPrevisto";
 }
 
 export default function FormularioTransacao({
   categorias,
+  tipo = "fatura",
 }: FormularioTransacaoProps) {
   //ViewModel
   const router = useRouter();
@@ -52,7 +54,13 @@ export default function FormularioTransacao({
         data: data.data,
         categoria_id: data.categoriaId,
       };
-      await clientApi.transacoes.create(payloadParaAPI);
+
+      if (tipo === "gastoPrevisto") {
+        await clientApi.transacoes.createGastoPrevisto(payloadParaAPI);
+      } else {
+        await clientApi.transacoes.create(payloadParaAPI);
+      }
+
       reset();
       router.refresh();
     } catch (err) {

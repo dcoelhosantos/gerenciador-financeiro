@@ -1,40 +1,89 @@
 "use client";
 
+import { clientApi } from "@/services/api/api.client";
+import { FaturasAgrupadas, Transacao } from "@/types";
+import { AlertCircle, Eraser, TrashIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ConfirmModal from "./ConfirmModal";
+
 interface ListaDeFaturasProps {
   faturasAgrupadas: FaturasAgrupadas;
 }
 
-import { clientApi } from "@/services/api/api.client";
-import { FaturasAgrupadas } from "@/types";
-import { AlertCircle, Loader2, TrashIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+type DeleteTarget =
+  | { type: "single"; id: number }
+  | { type: "category"; name: string; firstId: number }
+  | null;
 
 export default function ListaDeFaturas({
   faturasAgrupadas,
 }: ListaDeFaturasProps) {
   const router = useRouter();
-  const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleDelete = async (id: number) => {
-    if (loadingId) return;
+  const requestDeleteSingle = (id: number) => {
+    setDeleteTarget({ type: "single", id });
+  };
 
+  const requestDeleteCategory = (
+    nomeCategoria: string,
+    transacoes: Transacao[]
+  ) => {
+    if (!transacoes || transacoes.length === 0) return;
+    const categoryId = transacoes[0].categoria.id;
+    setDeleteTarget({
+      type: "category",
+      name: nomeCategoria,
+      firstId: categoryId,
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+
+    setIsLoading(true);
     setError(null);
 
     try {
-      setLoadingId(id);
-      await clientApi.transacoes.remove(id);
+      if (deleteTarget.type === "single") {
+        await clientApi.transacoes.remove(deleteTarget.id);
+      } else {
+        await clientApi.transacoes.removePorCategoria(deleteTarget.firstId);
+      }
+
       router.refresh();
+      setDeleteTarget(null);
     } catch (err) {
       console.error(err);
-      setError("Erro ao conectar com o servidor. Tente novamente.");
+      setError("Erro ao conectar com o servidor. Tente novamente. ");
     } finally {
-      setLoadingId(null);
+      setIsLoading(false);
     }
   };
+
   return (
     <div>
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+        isLoading={isLoading}
+        title={
+          deleteTarget?.type === "category"
+            ? "Limpar tudo?"
+            : "Apagar transação?"
+        }
+        description={
+          deleteTarget?.type === "category"
+            ? `Tem certeza que deseja apagar TODAS as transações de "${deleteTarget.name}"? Essa ação não pode ser desfeita.`
+            : "Tem certeza que deseja remover esta transação?"
+        }
+        confirmText="Sim, apagar"
+      />
+
       {error && (
         <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-4 flex items-center gap-2">
           <AlertCircle className="h-5 w-5" />
@@ -47,9 +96,24 @@ export default function ListaDeFaturas({
             key={nomeCategoria}
             className="border border-gray-700 rounded p-4"
           >
-            <h2 className="text-xl font-bold mb-3 text-green-500">
-              --- FATURA DE {nomeCategoria.toUpperCase()} ---
-            </h2>
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-xl font-bold mb-3 text-green-500">
+                --- FATURA DE {nomeCategoria.toUpperCase()} ---
+              </h2>
+
+              <button
+                onClick={() =>
+                  requestDeleteCategory(
+                    nomeCategoria,
+                    faturasAgrupadas[nomeCategoria].transacoes
+                  )
+                }
+                className="text-xs bg-red-900/50 text-red-400 border border-red-800 px-3 py-1 rounded flex items-center gap-2 transition-colors"
+              >
+                <Eraser className="h-3 w-3" />
+                Quitar Dívida Total
+              </button>
+            </div>
 
             <ul className="space-y-1">
               {faturasAgrupadas[nomeCategoria].transacoes.map((fatura) => (
@@ -60,15 +124,8 @@ export default function ListaDeFaturas({
                   <span>{fatura.descricao}</span>
                   <span className="flex items-center gap-2">
                     R$ {parseFloat(fatura.valor).toFixed(2)}
-                    <button
-                      onClick={() => handleDelete(fatura.id)}
-                      disabled={loadingId === fatura.id}
-                    >
-                      {loadingId === fatura.id ? (
-                        <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />
-                      ) : (
-                        <TrashIcon className="h-4 w-4 text-red-500 hover:text-red-400" />
-                      )}
+                    <button onClick={() => requestDeleteSingle(fatura.id)}>
+                      <TrashIcon className="h-4 w-4 text-red-500 hover:text-red-400" />
                     </button>
                   </span>
                 </li>

@@ -36,8 +36,17 @@ def adicionar_saldo(request, payload: SaldoUpdateSchema):
 
 # --- Endpoints de Categoria ---
 @api.get("/categorias", response=List[CategoriaSchema])
-def listar_categorias(request):
-    return Categoria.objects.all()
+def listar_categorias(request, exclude_id: int = None):
+    categorias = Categoria.objects.all()
+    
+    if exclude_id:
+        categorias = categorias.exclude(id=exclude_id)
+    
+    return categorias
+
+@api.get("/categorias/{int:categoria_id}", response=CategoriaSchema)
+def obter_categoria(request, categoria_id: int):
+    return get_object_or_404(Categoria, id=categoria_id)
 
 @api.post("/categorias", response=CategoriaSchema)
 def criar_categoria(request, payload: CategoriaSchema):

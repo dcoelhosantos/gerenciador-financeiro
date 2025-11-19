@@ -4,10 +4,21 @@ const API_URL = "http://localhost:8000/api";
 
 export const serverApi = {
   categorias: {
+    get: async (id: number): Promise<Categoria> => {
+      console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
+
+      const response = await fetch(`${API_URL}/categorias/${id}`);
+
+      if (!response.ok) {
+        throw new Error("Falha ao buscar categoria do Django");
+      }
+
+      return response.json();
+    },
     list: async (): Promise<Categoria[]> => {
       console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
 
-      const response = await fetch(`${API_URL}/categorias`);
+      const response = await fetch(`${API_URL}/categorias?exclude_id=6`);
 
       if (!response.ok) {
         throw new Error("Falha ao buscar categorias do Django");
@@ -41,7 +52,19 @@ export const serverApi = {
       );
 
       if (!response.ok) {
-        throw new Error("Falha ao buscar faturas do Django");
+        throw new Error("Falha ao buscar transações do Django");
+      }
+
+      return response.json();
+    },
+
+    listGastosPrevistos: async (): Promise<Transacao[]> => {
+      console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
+
+      const response = await fetch(`${API_URL}/transacoes?categoria_id=6`);
+
+      if (!response.ok) {
+        throw new Error("Falha ao buscar gastos previstos do Django");
       }
 
       return response.json();
