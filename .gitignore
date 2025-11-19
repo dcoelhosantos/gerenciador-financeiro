@@ -16,3 +16,7 @@ out/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Production assets
+backend/staticfiles/
+backend/static/
