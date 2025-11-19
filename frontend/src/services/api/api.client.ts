@@ -1,4 +1,4 @@
-import { Categoria } from "@/types";
+import { Categoria, CreateTransacaoPayload, Transacao } from "@/types";
 
 export const clientApi = {
   categorias: {
@@ -19,10 +19,24 @@ export const clientApi = {
   },
 
   transacoes: {
+    create: async (data: CreateTransacaoPayload): Promise<Transacao> => {
+      console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
+
+      const response = await fetch("/api/faturas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao criar transacão via BFF");
+      }
+      return response.json();
+    },
     remove: async (id: number) => {
       console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
 
-      const response = await fetch(`api/faturas?id=${id}`, {
+      const response = await fetch(`/api/faturas?id=${id}`, {
         method: "DELETE",
       });
 
@@ -36,7 +50,7 @@ export const clientApi = {
     removePorCategoria: async (categoria_id: number) => {
       console.log("RODANDO NO CLIENTE: Enviando dados para o BFF...");
 
-      const response = await fetch("api/faturas/delete_pela_categoria", {
+      const response = await fetch("/api/faturas/delete_pela_categoria", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: categoria_id }),

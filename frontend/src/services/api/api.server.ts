@@ -7,9 +7,7 @@ export const serverApi = {
     list: async (): Promise<Categoria[]> => {
       console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
 
-      const response = await fetch(`${API_URL}/categorias`, {
-        cache: "no-store",
-      });
+      const response = await fetch(`${API_URL}/categorias`);
 
       if (!response.ok) {
         throw new Error("Falha ao buscar categorias do Django");
@@ -22,9 +20,7 @@ export const serverApi = {
     get: async (): Promise<number> => {
       console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
 
-      const response = await fetch(`${API_URL}/saldo`, {
-        cache: "no-store",
-      });
+      const response = await fetch(`${API_URL}/saldo`);
 
       if (!response.ok) {
         throw new Error("Falha ao buscar saldo do Django");
@@ -55,10 +51,7 @@ export const serverApi = {
       console.log("RODANDO NO SERVIDOR: Buscando dados do Django...");
 
       const response = await fetch(
-        `${API_URL}/transacoes?categoria_id=${categoria_id}`,
-        {
-          cache: "no-store",
-        }
+        `${API_URL}/transacoes?categoria_id=${categoria_id}`
       );
 
       if (!response.ok) {

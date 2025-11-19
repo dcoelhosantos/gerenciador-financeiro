@@ -1,13 +1,21 @@
+import FormularioTransacao from "@/components/FormularioTransacao";
 import ListaDeFaturas from "@/components/ListaDeFaturas";
 import { serverApi } from "@/services/api/api.server";
-import { FaturasAgrupadas, Transacao } from "@/types";
+import { Categoria, FaturasAgrupadas, Transacao } from "@/types";
 
 export default async function Faturas() {
   let faturas: Transacao[] = [];
+  let categorias: Categoria[] = [];
   let error: string | null = null;
 
   try {
-    faturas = await serverApi.transacoes.list();
+    const [faturasData, categoriasData] = await Promise.all([
+      serverApi.transacoes.list(),
+      serverApi.categorias.list(), // Essa função já existe no seu api.server.ts
+    ]);
+
+    faturas = faturasData;
+    categorias = categoriasData;
   } catch (err) {
     if (err instanceof Error) error = err.message;
   }
@@ -34,7 +42,13 @@ export default async function Faturas() {
   return (
     <main className="p-8 bg-gray-900 text-gray-200 min-h-screen">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-8 text-white">Faturas</h1>
+        <h1 className="text-2xl font-bold mb-8 text-white">
+          MEU GERENCIADOR DE FATURAS
+        </h1>
+      </div>
+
+      <div className="mb-8">
+        <FormularioTransacao categorias={categorias} />
       </div>
 
       {error && (
@@ -43,9 +57,9 @@ export default async function Faturas() {
         </p>
       )}
 
-      <div className="mb-8 p-4 border border-blue-500 bg-gray-800 rounded-lg text-center">
-        <h2 className="text-lg font-semibold text-blue-300">
-          TOTAL GERAL DAS FATURAS
+      <div className="mb-8 p-4 border border-gray-700 bg-gray-800 rounded-lg text-center">
+        <h2 className="text-lg font-semibold text-green-500">
+          --- TOTAL GERAL DAS FATURAS ---
         </h2>
         <p className="text-3xl font-bold text-white">
           R$ {totalGeral.toFixed(2)}

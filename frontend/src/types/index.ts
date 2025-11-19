@@ -24,3 +24,10 @@ export interface InfoCategoria {
 export interface FaturasAgrupadas {
   [nomeCategoria: string]: InfoCategoria;
 }
+
+export interface CreateTransacaoPayload {
+  descricao: string;
+  valor: number;
+  categoria_id: number;
+  data: string;
+}

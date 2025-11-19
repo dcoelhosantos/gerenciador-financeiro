@@ -23,7 +23,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
@@ -36,6 +36,9 @@ export async function POST(request: Request) {
     if (!response.ok) {
       throw new Error(`Erro do Django: ${response.statusText}`);
     }
+
+    revalidatePath("/faturas");
+    revalidatePath("/");
 
     const data: Transacao = await response.json();
     return NextResponse.json(data, { status: 201 });

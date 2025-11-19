@@ -6,7 +6,7 @@ interface ListaDeFaturasProps {
 
 import { clientApi } from "@/services/api/api.client";
 import { FaturasAgrupadas } from "@/types";
-import { Loader2, TrashIcon } from "lucide-react";
+import { AlertCircle, Loader2, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -15,10 +15,12 @@ export default function ListaDeFaturas({
 }: ListaDeFaturasProps) {
   const router = useRouter();
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDelete = async (id: number) => {
-    console.log(`--- 1. Clique detectado para o ID: ${id} ---`);
     if (loadingId) return;
+
+    setError(null);
 
     try {
       setLoadingId(id);
@@ -26,12 +28,19 @@ export default function ListaDeFaturas({
       router.refresh();
     } catch (err) {
       console.error(err);
+      setError("Erro ao conectar com o servidor. Tente novamente.");
     } finally {
       setLoadingId(null);
     }
   };
   return (
     <div>
+      {error && (
+        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-4 flex items-center gap-2">
+          <AlertCircle className="h-5 w-5" />
+          <p>{error}</p>
+        </div>
+      )}
       <div className="space-y-6">
         {Object.keys(faturasAgrupadas).map((nomeCategoria) => (
           <div

@@ -1,9 +1,10 @@
 // frontend/src/app/(BFF)/api/faturas/clear-category/route.ts
-import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 const DJANGO_API_URL = "http://localhost:8000/api/transacoes/clear-by-category";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const categoriaId = body.id;
@@ -21,6 +22,9 @@ export async function POST(request: Request) {
     if (!response.ok) {
       throw new Error(`Erro do Django: ${response.statusText}`);
     }
+
+    revalidatePath("/faturas");
+    revalidatePath("/");
 
     return new NextResponse(null, { status: 204 });
   } catch (err) {
