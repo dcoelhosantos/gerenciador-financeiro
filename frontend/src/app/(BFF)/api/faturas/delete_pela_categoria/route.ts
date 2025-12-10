@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
-const DJANGO_API_URL = "http://localhost:8000/api/transacoes/clear-by-category";
+const DJANGO_API_URL = "http://127.0.0.1:8001/api/transacoes/clear-by-category";
 
 export async function POST(request: NextRequest) {
   try {

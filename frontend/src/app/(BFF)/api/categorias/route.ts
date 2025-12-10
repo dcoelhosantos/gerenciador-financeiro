@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { Categoria } from "@/types";
+import { NextResponse } from "next/server";
 
-const DJANGO_API_URL = "http://localhost:8000/api/categorias";
+const DJANGO_API_URL = "http://127.0.0.1:8001/api/categorias";
 
 export async function GET() {
   try {

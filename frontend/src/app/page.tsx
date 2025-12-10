@@ -1,6 +1,8 @@
 import DashboardActions from "@/components/DashboardActions";
 import { serverApi } from "@/services/api/api.server";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   let saldo: number = 0;
   let saldo_futuro: number = 0;

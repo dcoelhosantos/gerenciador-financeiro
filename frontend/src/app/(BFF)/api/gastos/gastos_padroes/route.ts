@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
-const DJANGO_API_URL = "http://localhost:8000/api/transacoes/batch";
+const DJANGO_API_URL = "http://127.0.0.1:8001/api/transacoes/batch";
 
 export async function POST(request: Request) {
   try {

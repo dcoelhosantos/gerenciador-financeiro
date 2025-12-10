@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
-const DJANGO_API_URL = "http://localhost:8000/api/saldo/atualizar"; // Endpoint do Django Ninja
+const DJANGO_API_URL = "http://127.0.0.1:8001/api/saldo/atualizar"; // Endpoint do Django Ninja
 
 export async function POST(request: Request) {
   try {
