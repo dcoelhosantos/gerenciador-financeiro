@@ -13,20 +13,50 @@ export default function DashboardActions() {
 
   const gastosPadroes = [
     {
-      descricao: "Contas fixas",
-      valor: 252.5,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Academia",
-      valor: 78,
+      descricao: "Guardar",
+      valor: 1000,
       categoria_id: 6,
       data: new Date().toISOString().split("T")[0],
     },
     {
       descricao: "Energia",
       valor: 40,
+      categoria_id: 6,
+      data: new Date().toISOString().split("T")[0],
+    },
+    {
+      descricao: "Academia",
+      valor: 100,
+      categoria_id: 6,
+      data: new Date().toISOString().split("T")[0],
+    },
+    {
+      descricao: "Internet",
+      valor: 119.9,
+      categoria_id: 6,
+      data: new Date().toISOString().split("T")[0],
+    },
+    {
+      descricao: "Aluguel",
+      valor: 147.6,
+      categoria_id: 6,
+      data: new Date().toISOString().split("T")[0],
+    },
+    {
+      descricao: "Mercado",
+      valor: 500,
+      categoria_id: 6,
+      data: new Date().toISOString().split("T")[0],
+    },
+    {
+      descricao: "Transporte para SC",
+      valor: 120,
+      categoria_id: 6,
+      data: new Date().toISOString().split("T")[0],
+    },
+    {
+      descricao: "Assinaturas",
+      valor: 245,
       categoria_id: 6,
       data: new Date().toISOString().split("T")[0],
     },
