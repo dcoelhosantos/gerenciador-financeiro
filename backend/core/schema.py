@@ -1,4 +1,6 @@
 # backend/core/schema.py
+from typing import Optional
+
 from ninja import ModelSchema, Schema
 
 from .models import Assinatura, Categoria, GastoPadrao, Saldo, Transacao
@@ -63,7 +65,7 @@ class GastoPadraoInput(Schema):
 
 class AssinaturaComStatusSchema(AssinaturaSchema):
     lancada_no_mes: bool
-    transacao_id: int = None
+    transacao_id: Optional[int] = None
 
 
 class TransferenciaSpotifySchema(Schema):

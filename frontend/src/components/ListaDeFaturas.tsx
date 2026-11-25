@@ -2,6 +2,7 @@
 
 import { clientApi } from "@/services/api/api.client";
 import { FaturasAgrupadas, Transacao } from "@/types";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { AlertCircle, Eraser, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -85,20 +86,20 @@ export default function ListaDeFaturas({
       />
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-4 flex items-center gap-2">
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-rose-800 bg-rose-950/50 p-3 text-rose-200">
           <AlertCircle className="h-5 w-5" />
           <p>{error}</p>
         </div>
       )}
-      <div className="space-y-6">
+      <div className="space-y-5">
         {Object.keys(faturasAgrupadas).map((nomeCategoria) => (
           <div
             key={nomeCategoria}
-            className="border border-gray-700 rounded p-4"
+            className="rounded-2xl border border-slate-700 bg-slate-800/60 p-5 sm:p-6"
           >
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-xl font-bold mb-3 text-green-500">
-                --- FATURA DE {nomeCategoria.toUpperCase()} ---
+              <h2 className="text-xl font-semibold text-white">
+                Fatura de {nomeCategoria}
               </h2>
 
               <button
@@ -108,7 +109,7 @@ export default function ListaDeFaturas({
                     faturasAgrupadas[nomeCategoria].transacoes
                   )
                 }
-                className="text-xs bg-red-900/50 text-red-400 border border-red-800 px-3 py-1 rounded flex items-center gap-2 transition-colors"
+                className="flex items-center gap-2 rounded-lg border border-rose-900 bg-rose-950/30 px-3 py-2 text-xs text-rose-300 transition hover:bg-rose-950/60"
               >
                 <Eraser className="h-3 w-3" />
                 Quitar Dívida Total
@@ -119,11 +120,11 @@ export default function ListaDeFaturas({
               {faturasAgrupadas[nomeCategoria].transacoes.map((fatura) => (
                 <li
                   key={fatura.id}
-                  className="flex justify-between items-center"
+                  className="flex items-center justify-between gap-4 border-b border-slate-700/70 py-3 last:border-0"
                 >
                   <span>{fatura.descricao}</span>
                   <span className="flex items-center gap-2">
-                    R$ {parseFloat(fatura.valor).toFixed(2)}
+                    {formatCurrency(fatura.valor)}
                     <button onClick={() => requestDeleteSingle(fatura.id)}>
                       <TrashIcon className="h-4 w-4 text-red-500 hover:text-red-400" />
                     </button>
@@ -132,11 +133,9 @@ export default function ListaDeFaturas({
               ))}
             </ul>
 
-            <hr className="my-3 border-gray-600" />
-
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total gasto:</span>
-              <span>R$ {faturasAgrupadas[nomeCategoria].total.toFixed(2)}</span>
+            <div className="mt-3 flex justify-between border-t border-slate-700 pt-4 font-semibold">
+              <span className="text-slate-400">Subtotal</span>
+              <span className="text-white">{formatCurrency(faturasAgrupadas[nomeCategoria].total)}</span>
             </div>
           </div>
         ))}

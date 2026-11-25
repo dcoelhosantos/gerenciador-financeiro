@@ -2,6 +2,7 @@
 
 import { clientApi } from "@/services/api/api.client";
 import { Transacao } from "@/types";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { AlertCircle, Eraser, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -76,22 +77,22 @@ export default function ListaDeGastosPrevistos({
       />
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-4 flex items-center gap-2">
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-rose-800 bg-rose-950/50 p-3 text-rose-200">
           <AlertCircle className="h-5 w-5" />
           <p>{error}</p>
         </div>
       )}
       <div className="space-y-6">
-        <div className="border border-gray-700 rounded p-4">
+        <div className="rounded-xl border border-slate-700 bg-slate-900/50 p-4">
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-xl font-bold mb-3 text-green-500">
-              --- GASTOS PREVISTOS ---
+            <h2 className="text-lg font-semibold text-white">
+              Lançamentos previstos
             </h2>
 
             {gastosPrevistos.length > 0 && (
               <button
                 onClick={requestClearCategory}
-                className="text-xs bg-red-900/50 text-red-400 border border-red-800 px-3 py-1 rounded flex items-center gap-2 transition-colors hover:bg-red-900/70"
+                className="flex items-center gap-2 rounded-lg border border-rose-900 bg-rose-950/30 px-3 py-2 text-xs text-rose-300 transition hover:bg-rose-950/60"
               >
                 <Eraser className="h-3 w-3" />
                 Limpar Gastos Previstos
@@ -103,11 +104,11 @@ export default function ListaDeGastosPrevistos({
             {gastosPrevistos.map((gastoPrevisto) => (
               <li
                 key={gastoPrevisto.id}
-                className="flex justify-between items-center"
+                className="flex items-center justify-between gap-4 border-b border-slate-700/70 py-3 last:border-0"
               >
                 <span>{gastoPrevisto.descricao}</span>
                 <span className="flex items-center gap-2">
-                  R$ {parseFloat(gastoPrevisto.valor).toFixed(2)}
+                  {formatCurrency(gastoPrevisto.valor)}
                   <button onClick={() => requestDeleteSingle(gastoPrevisto.id)}>
                     <TrashIcon className="h-4 w-4 text-red-500 hover:text-red-400" />
                   </button>

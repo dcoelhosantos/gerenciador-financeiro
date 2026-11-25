@@ -1,112 +1,99 @@
 "use client";
 
 import { clientApi } from "@/services/api/api.client";
-import { Check, DollarSign, LayoutList, Loader2, X } from "lucide-react";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { Check, DollarSign, Loader2, Pencil, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { GastoPadrao } from "@/types";
 
 export default function DashboardActions({
-  gastosPadroes,
+  saldoAtual,
 }: {
-  gastosPadroes: GastoPadrao[];
+  saldoAtual: number;
 }) {
   const router = useRouter();
-  const [loading, setLoading] = useState<string | null>(null);
-  const [showSaldoInput, setShowSaldoInput] = useState(false);
-  const [novoSaldo, setNovoSaldo] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [valor, setValor] = useState(String(saldoAtual));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleAdicionarPadroes = async () => {
-    if (loading) return;
-    try {
-      setLoading("padrao");
-      await clientApi.transacoes.createGastosPadroes(
-        gastosPadroes.map((gasto) => ({
-          descricao: gasto.descricao,
-          valor: parseFloat(gasto.valor),
-          categoria_id: 6,
-          data: new Date().toISOString().split("T")[0],
-        }))
-      );
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao adicionar gastos padrões");
-    } finally {
-      setLoading(null);
+  const salvar = async () => {
+    const novoSaldo = Number(valor);
+    if (!Number.isFinite(novoSaldo) || novoSaldo < 0) {
+      setError("Informe um saldo válido.");
+      return;
     }
-  };
-
-  const handleAtualizarSaldo = async () => {
-    if (!novoSaldo) return;
+    setLoading(true);
+    setError("");
     try {
-      setLoading("saldo");
-      await clientApi.saldo.update(parseFloat(novoSaldo));
-      setShowSaldoInput(false);
-      setNovoSaldo("");
+      await clientApi.saldo.update(novoSaldo);
+      setEditing(false);
       router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao atualizar saldo");
+    } catch {
+      setError("Não foi possível atualizar o saldo.");
     } finally {
-      setLoading(null);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 justify-center mb-8">
-      <button
-        onClick={handleAdicionarPadroes}
-        disabled={!!loading}
-        className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-all shadow-md"
-      >
-        {loading === "padrao" ? (
-          <Loader2 className="animate-spin" />
-        ) : (
-          <LayoutList />
-        )}
-        Adicionar Gastos Padrões
-      </button>
-
-      {showSaldoInput ? (
-        <div className="flex items-center gap-2 bg-gray-800 p-1 rounded-lg border border-gray-600 animate-in fade-in slide-in-from-left-4">
-          <input
-            type="number"
-            step="0.01"
-            placeholder="Novo valor..."
-            value={novoSaldo}
-            onChange={(e) => setNovoSaldo(e.target.value)}
-            className="bg-gray-700 text-white p-2 rounded-md outline-none w-32"
-            autoFocus
-          />
+    <section className="rounded-2xl border border-slate-700 bg-slate-800/80 p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium text-slate-400">Saldo atual</p>
+          {!editing && (
+            <p className="mt-2 text-2xl font-semibold tracking-tight text-white">
+            {formatCurrency(saldoAtual)}
+            </p>
+          )}
+        </div>
+        {!editing && (
           <button
-            onClick={handleAtualizarSaldo}
-            disabled={!!loading}
-            className="bg-green-600 hover:bg-green-700 p-2 rounded-md text-white"
+            type="button"
+            onClick={() => { setValor(String(saldoAtual)); setEditing(true); }}
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-200 transition hover:border-slate-400 hover:bg-slate-700"
           >
-            {loading === "saldo" ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
-            ) : (
-              <Check className="h-5 w-5" />
-            )}
+            <Pencil className="h-4 w-4" />
+            Editar
+          </button>
+        )}
+      </div>
+      {editing && (
+        <div className="mt-4 flex gap-2">
+          <label className="relative min-w-0 flex-1">
+            <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              autoFocus
+              type="number"
+              min="0"
+              step="0.01"
+              value={valor}
+              onChange={(event) => setValor(event.target.value)}
+              className="w-full rounded-lg border border-slate-600 bg-slate-900 py-2 pl-9 pr-3 text-white outline-none focus:border-emerald-500"
+              aria-label="Novo saldo atual"
+            />
+          </label>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={salvar}
+            aria-label="Salvar saldo"
+            className="rounded-lg bg-emerald-600 px-3 text-white transition hover:bg-emerald-500 disabled:opacity-50"
+          >
+            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Check className="h-5 w-5" />}
           </button>
           <button
-            onClick={() => setShowSaldoInput(false)}
-            className="bg-red-600/80 hover:bg-red-700 p-2 rounded-md text-white"
+            type="button"
+            disabled={loading}
+            onClick={() => { setEditing(false); setError(""); }}
+            aria-label="Cancelar edição do saldo"
+            className="rounded-lg border border-slate-600 px-3 text-slate-300 transition hover:bg-slate-700"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
-      ) : (
-        <button
-          onClick={() => setShowSaldoInput(true)}
-          disabled={!!loading}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-all shadow-md"
-        >
-          <DollarSign />
-          Atualizar Saldo
-        </button>
       )}
-    </div>
+      {error && <p className="mt-2 text-sm text-rose-300">{error}</p>}
+    </section>
   );
 }

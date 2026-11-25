@@ -27,21 +27,24 @@ export default function FaturasActions() {
   };
 
   return (
-    <div className="mb-6 flex flex-col items-center gap-2">
+    <section className="flex flex-col items-start gap-3 rounded-2xl border border-slate-700 bg-slate-800/60 p-5">
+      <div>
+        <h2 className="font-semibold text-white">Contas Spotify</h2>
+        <p className="mt-1 text-sm text-slate-400">
+          Lança quatro contas em Outros e uma em Jakla.
+        </p>
+      </div>
       <button
         type="button"
         onClick={handleAdicionarSpotify}
         disabled={loading}
-        className="bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2"
+        className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50"
       >
         {loading ? <Loader2 className="animate-spin" /> : <Music2 />}
         Adicionar contas Spotify
       </button>
       {message && <p className="text-green-400 text-sm">{message}</p>}
       {error && <p className="text-red-400 text-sm">{error}</p>}
-      <p className="text-xs text-gray-400">
-        Adiciona quatro contas em Outros e uma em Jakla.
-      </p>
-    </div>
+    </section>
   );
 }

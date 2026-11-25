@@ -73,7 +73,7 @@ export default function FormularioTransacao({
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-gray-800 p-4 rounded-lg border border-gray-700 space-y-4 max-w-xzl mx-auto"
+      className="space-y-4"
     >
       {errors.root && (
         <div className="text-red-500 bg-red-500/10 p-2 rounded text-sm">
@@ -84,13 +84,13 @@ export default function FormularioTransacao({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Descrição */}
         <div>
-          <label className="block text-sm font-medium text-gray-300">
+          <label className="block text-sm font-medium text-slate-300">
             Descrição
           </label>
           <input
             {...register("descricao")}
             type="text"
-            className="mt-1 w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:ring-2 focus:ring-green-500 outline-none"
+            className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-2.5 text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
             placeholder="Ex: Netflix"
           />
           {errors.descricao && (
@@ -102,7 +102,7 @@ export default function FormularioTransacao({
 
         {/* Valor */}
         <div>
-          <label className="block text-sm font-medium text-gray-300">
+          <label className="block text-sm font-medium text-slate-300">
             Valor (R$)
           </label>
           <input
@@ -110,7 +110,7 @@ export default function FormularioTransacao({
             type="number"
             step="0.01"
             placeholder="Ex: 50.00"
-            className="mt-1 w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:ring-2 focus:ring-green-500 outline-none"
+            className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-2.5 text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-500"
           />
           {errors.valor && (
             <span className="text-red-400 text-xs">{errors.valor.message}</span>
@@ -119,12 +119,12 @@ export default function FormularioTransacao({
 
         {/* Categoria */}
         <div>
-          <label className="block text-sm font-medium text-gray-300">
+          <label className="block text-sm font-medium text-slate-300">
             Categoria
           </label>
           <select
             {...register("categoriaId")}
-            className="mt-1 w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:ring-2 focus:ring-green-500 outline-none"
+            className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-2.5 text-white outline-none transition focus:border-emerald-500"
           >
             <option value="0" disabled>
               Selecione...
@@ -144,13 +144,13 @@ export default function FormularioTransacao({
 
         {/* Data */}
         <div>
-          <label className="block text-sm font-medium text-gray-300">
+          <label className="block text-sm font-medium text-slate-300">
             Data
           </label>
           <input
             {...register("data")}
             type="date"
-            className="mt-1 w-full bg-gray-700 border border-gray-600 rounded p-2 text-white focus:ring-2 focus:ring-green-500 outline-none"
+            className="mt-1 w-full rounded-lg border border-slate-600 bg-slate-900 p-2.5 text-white outline-none transition focus:border-emerald-500"
           />
           {errors.data && (
             <span className="text-red-400 text-xs">{errors.data.message}</span>
@@ -163,7 +163,7 @@ export default function FormularioTransacao({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-green-700 hover:bg-green-800 text-white font-bold mt-6 py-2 px-4 rounded transition-colors flex justify-center items-center gap-2 disabled:opacity-50"
+          className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50"
         >
           {isSubmitting ? (
             <>

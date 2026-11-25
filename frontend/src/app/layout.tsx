@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Gerenciador Financeiro",
-  description: "Meu app financeiro",
+  description: "Acompanhe faturas, gastos previstos e assinaturas.",
 };
 
 export default function RootLayout({
@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="pt-BR">
+      <body className={`${inter.className} bg-slate-950`}>
         <Navbar />
         {children}
       </body>

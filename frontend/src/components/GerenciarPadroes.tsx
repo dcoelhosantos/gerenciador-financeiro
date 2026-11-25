@@ -2,6 +2,7 @@
 
 import { Assinatura, GastoPadrao } from "@/types";
 import { clientApi } from "@/services/api/api.client";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -99,16 +100,16 @@ export default function GerenciarPadroes({
     }
   };
 
-  const inputClass = "w-full rounded border border-gray-600 bg-gray-700 p-2 text-white";
-  const buttonClass = "rounded bg-green-700 px-4 py-2 font-semibold text-white hover:bg-green-600 disabled:opacity-50";
-  const rowClass = "flex items-center justify-between gap-4 border-b border-gray-700 py-3 last:border-0";
+  const inputClass = "w-full rounded-lg border border-slate-600 bg-slate-900 p-2.5 text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none";
+  const buttonClass = "rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50";
+  const rowClass = "flex items-center justify-between gap-4 border-b border-slate-700 py-3 last:border-0";
 
   return (
     <div className="space-y-8">
-      {error && <p className="rounded border border-red-700 bg-red-900/20 p-3 text-red-300">{error}</p>}
+      {error && <p className="rounded-xl border border-rose-800 bg-rose-950/50 p-3 text-rose-200">{error}</p>}
 
-      <section id="gastos" className="scroll-mt-20 rounded-lg border border-gray-700 bg-gray-800 p-5">
-        <h2 className="mb-4 text-xl font-bold text-green-400">Gastos padrão</h2>
+      <section id="gastos" className="scroll-mt-20 rounded-2xl border border-slate-700 bg-slate-800/60 p-5 sm:p-6">
+        <h2 className="mb-4 text-xl font-semibold text-amber-200">Gastos padrão</h2>
         <form onSubmit={atualizarGasto} className="mb-5 grid gap-3 sm:grid-cols-[1fr_160px_auto]">
           <input className={inputClass} value={descricaoGasto} onChange={(e) => setDescricaoGasto(e.target.value)} placeholder="Descrição" />
           <input className={inputClass} value={valorGasto} onChange={(e) => setValorGasto(e.target.value)} type="number" min="0.01" step="0.01" placeholder="Valor (R$)" />
@@ -117,7 +118,7 @@ export default function GerenciarPadroes({
         <ul>
           {gastos.map((item) => (
             <li className={rowClass} key={item.id}>
-              <span>{item.descricao} <span className="text-gray-400">— R$ {Number(item.valor).toFixed(2)}</span></span>
+              <span>{item.descricao} <span className="text-slate-400">— {formatCurrency(item.valor)}</span></span>
               <span className="flex shrink-0 gap-3">
                 <button aria-label={`Editar ${item.descricao}`} onClick={() => { setGastoEmEdicao(item.id); setDescricaoGasto(item.descricao); setValorGasto(String(Number(item.valor))); }}><Pencil className="h-4 w-4 text-blue-300" /></button>
                 <button aria-label={`Remover ${item.descricao}`} disabled={busy} onClick={() => excluirGasto(item)}><Trash2 className="h-4 w-4 text-red-400" /></button>
@@ -128,10 +129,10 @@ export default function GerenciarPadroes({
         {gastoEmEdicao !== null && <button className="mt-3 text-sm text-gray-300 underline" onClick={() => { setGastoEmEdicao(null); setDescricaoGasto(""); setValorGasto(""); }}>Cancelar edição</button>}
       </section>
 
-      <section id="assinaturas" className="scroll-mt-20 rounded-lg border border-gray-700 bg-gray-800 p-5">
+      <section id="assinaturas" className="scroll-mt-20 rounded-2xl border border-slate-700 bg-slate-800/60 p-5 sm:p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-xl font-bold text-green-400">Assinaturas padrão</h2>
-          <Link className="text-sm text-blue-300 underline" href="/assinaturas">Abrir Fatura de Assinaturas</Link>
+          <h2 className="text-xl font-semibold text-violet-200">Assinaturas padrão</h2>
+          <Link className="text-sm text-violet-300 underline" href="/assinaturas">Abrir Fatura de Assinaturas</Link>
         </div>
         <form onSubmit={atualizarAssinatura} className="mb-5 grid gap-3 sm:grid-cols-[1fr_160px_auto]">
           <input className={inputClass} value={nomeAssinatura} onChange={(e) => setNomeAssinatura(e.target.value)} placeholder="Nome da assinatura" />
@@ -141,7 +142,7 @@ export default function GerenciarPadroes({
         <ul>
           {assinaturas.map((item) => (
             <li className={rowClass} key={item.id}>
-              <span>{item.nome} <span className="text-gray-400">— R$ {Number(item.valor).toFixed(2)}</span></span>
+              <span>{item.nome} <span className="text-slate-400">— {formatCurrency(item.valor)}</span></span>
               <span className="flex shrink-0 gap-3">
                 <button aria-label={`Editar ${item.nome}`} onClick={() => { setAssinaturaEmEdicao(item.id); setNomeAssinatura(item.nome); setValorAssinatura(String(Number(item.valor))); }}><Pencil className="h-4 w-4 text-blue-300" /></button>
                 <button aria-label={`Remover ${item.nome}`} disabled={busy} onClick={() => excluirAssinatura(item)}><Trash2 className="h-4 w-4 text-red-400" /></button>
