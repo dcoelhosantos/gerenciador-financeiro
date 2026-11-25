@@ -29,3 +29,53 @@ class Saldo(models.Model):
 
     def __str__(self):
         return f"Saldo Atual: R$ {self.valor_atual}"
+
+
+class GastoPadrao(models.Model):
+    descricao = models.CharField(max_length=255)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    ordem = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["ordem", "id"]
+
+    def __str__(self):
+        return f"{self.descricao} (R$ {self.valor})"
+
+
+class Assinatura(models.Model):
+    nome = models.CharField(max_length=255)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    ordem = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["ordem", "id"]
+
+    def __str__(self):
+        return f"{self.nome} (R$ {self.valor})"
+
+
+class AssinaturaLancamento(models.Model):
+    assinatura = models.ForeignKey(
+        Assinatura,
+        on_delete=models.CASCADE,
+        related_name="lancamentos",
+    )
+    transacao = models.OneToOneField(
+        Transacao,
+        on_delete=models.CASCADE,
+        related_name="assinatura_lancamento",
+    )
+    periodo = models.CharField(max_length=7)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["assinatura", "periodo"],
+                name="unique_assinatura_por_periodo",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.assinatura.nome} - {self.periodo}"

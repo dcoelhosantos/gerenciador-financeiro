@@ -1,4 +1,10 @@
-import { Categoria, CreateTransacaoPayload, Transacao } from "@/types";
+import {
+  Assinatura,
+  Categoria,
+  CreateTransacaoPayload,
+  GastoPadrao,
+  Transacao,
+} from "@/types";
 
 export const clientApi = {
   saldo: {
@@ -141,6 +147,86 @@ export const clientApi = {
       }
 
       return;
+    },
+
+    createContasSpotify: async () => {
+      const response = await fetch("/api/acoes/adicionar-spotify", {
+        method: "POST",
+      });
+      if (!response.ok) throw new Error("Falha ao adicionar as contas Spotify");
+      return response.json() as Promise<{ criadas: number }>;
+    },
+  },
+
+  gastosPadroes: {
+    create: async (item: { descricao: string; valor: number }) => {
+      const response = await fetch("/api/gastos/padroes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      if (!response.ok) throw new Error(await response.text());
+      return response.json() as Promise<GastoPadrao>;
+    },
+    update: async (id: number, item: { descricao: string; valor: number }) => {
+      const response = await fetch(`/api/gastos/padroes?id=${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      if (!response.ok) throw new Error(await response.text());
+      return response.json() as Promise<GastoPadrao>;
+    },
+    remove: async (id: number) => {
+      const response = await fetch(`/api/gastos/padroes?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error(await response.text());
+    },
+  },
+
+  assinaturas: {
+    create: async (item: { nome: string; valor: number }) => {
+      const response = await fetch("/api/assinaturas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      if (!response.ok) throw new Error(await response.text());
+      return response.json() as Promise<Assinatura>;
+    },
+    update: async (id: number, item: { nome: string; valor: number }) => {
+      const response = await fetch(`/api/assinaturas?id=${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      if (!response.ok) throw new Error(await response.text());
+      return response.json() as Promise<Assinatura>;
+    },
+    remove: async (id: number) => {
+      const response = await fetch(`/api/assinaturas?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error(await response.text());
+    },
+    transferir: async (id: number) => {
+      const response = await fetch(`/api/assinaturas/transferir?id=${id}`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        let message = await response.text();
+        try {
+          message = JSON.parse(message).detail ?? message;
+        } catch {
+          // Mantém o texto original quando a resposta não é JSON.
+        }
+        if (response.status === 409) {
+          throw new Error("Essa assinatura já foi lançada neste mês.");
+        }
+        throw new Error(message);
+      }
+      return response.json() as Promise<Transacao>;
     },
   },
 };

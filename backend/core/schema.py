@@ -1,7 +1,7 @@
 # backend/core/schema.py
 from ninja import ModelSchema, Schema
 
-from .models import Categoria, Saldo, Transacao
+from .models import Assinatura, Categoria, GastoPadrao, Saldo, Transacao
 
 # from typing import Optional
 
@@ -37,3 +37,34 @@ class TransacaoCreateSchema(Schema):
 
 class ClearCategorySchema(Schema):
     categoria_id: int
+
+
+class GastoPadraoSchema(ModelSchema):
+    class Meta:
+        model = GastoPadrao
+        fields = ["id", "descricao", "valor", "ordem"]
+
+
+class AssinaturaSchema(ModelSchema):
+    class Meta:
+        model = Assinatura
+        fields = ["id", "nome", "valor", "ordem"]
+
+
+class ModeloFinanceiroInput(Schema):
+    nome: str
+    valor: float
+
+
+class GastoPadraoInput(Schema):
+    descricao: str
+    valor: float
+
+
+class AssinaturaComStatusSchema(AssinaturaSchema):
+    lancada_no_mes: bool
+    transacao_id: int = None
+
+
+class TransferenciaSpotifySchema(Schema):
+    criadas: int

@@ -31,3 +31,19 @@ export interface CreateTransacaoPayload {
   categoria_id: number;
   data: string;
 }
+
+export interface GastoPadrao {
+  id: number;
+  descricao: string;
+  valor: string;
+  ordem: number;
+}
+
+export interface Assinatura {
+  id: number;
+  nome: string;
+  valor: string;
+  ordem: number;
+  lancada_no_mes: boolean;
+  transacao_id: number | null;
+}

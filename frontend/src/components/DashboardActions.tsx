@@ -4,69 +4,30 @@ import { clientApi } from "@/services/api/api.client";
 import { Check, DollarSign, LayoutList, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { GastoPadrao } from "@/types";
 
-export default function DashboardActions() {
+export default function DashboardActions({
+  gastosPadroes,
+}: {
+  gastosPadroes: GastoPadrao[];
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
   const [showSaldoInput, setShowSaldoInput] = useState(false);
   const [novoSaldo, setNovoSaldo] = useState("");
 
-  const gastosPadroes = [
-    {
-      descricao: "Guardar",
-      valor: 1000,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Energia",
-      valor: 40,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Academia",
-      valor: 100,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Internet",
-      valor: 119.9,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Aluguel",
-      valor: 147.6,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Mercado",
-      valor: 500,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Transporte para SC",
-      valor: 120,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-    {
-      descricao: "Assinaturas",
-      valor: 245,
-      categoria_id: 6,
-      data: new Date().toISOString().split("T")[0],
-    },
-  ];
-
   const handleAdicionarPadroes = async () => {
     if (loading) return;
     try {
       setLoading("padrao");
-      await clientApi.transacoes.createGastosPadroes(gastosPadroes);
+      await clientApi.transacoes.createGastosPadroes(
+        gastosPadroes.map((gasto) => ({
+          descricao: gasto.descricao,
+          valor: parseFloat(gasto.valor),
+          categoria_id: 6,
+          data: new Date().toISOString().split("T")[0],
+        }))
+      );
       router.refresh();
     } catch (error) {
       console.error(error);

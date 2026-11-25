@@ -1,4 +1,4 @@
-import { Categoria, Saldo, Transacao } from "@/types";
+import { Assinatura, Categoria, GastoPadrao, Saldo, Transacao } from "@/types";
 
 const API_URL = "http://127.0.0.1:8001/api";
 
@@ -90,6 +90,34 @@ export const serverApi = {
       );
 
       return total;
+    },
+  },
+
+  gastosPadroes: {
+    list: async (): Promise<GastoPadrao[]> => {
+      const response = await fetch(`${API_URL}/gastos-padroes`, {
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Falha ao buscar gastos padrão");
+      return response.json();
+    },
+  },
+
+  assinaturas: {
+    list: async (): Promise<Assinatura[]> => {
+      const response = await fetch(`${API_URL}/assinaturas`, {
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Falha ao buscar assinaturas");
+      return response.json();
+    },
+    totalPendente: async (): Promise<number> => {
+      const response = await fetch(`${API_URL}/assinaturas/total-pendente`, {
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Falha ao calcular assinaturas");
+      const data: { total: string } = await response.json();
+      return parseFloat(data.total);
     },
   },
 };

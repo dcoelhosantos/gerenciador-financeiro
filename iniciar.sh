@@ -9,6 +9,8 @@ echo "🚀 Iniciando Gerenciador Financeiro..."
 echo "Starting Backend..."
 cd "$BASE_DIR/backend"
 source venv/bin/activate
+# Aplica migrações pendentes sem alterar transações e saldo já existentes.
+./venv/bin/python manage.py migrate --noinput || exit 1
 # Roda o Gunicorn na porta 8000, em background (&)
 # O '--access-logfile -' mostra os logs no terminal (opcional)
 ./venv/bin/gunicorn config.wsgi:application --bind 127.0.0.1:8001 --access-logfile - &

@@ -1,4 +1,5 @@
 import FormularioTransacao from "@/components/FormularioTransacao";
+import FaturasActions from "@/components/FaturasActions";
 import ListaDeFaturas from "@/components/ListaDeFaturas";
 import { serverApi } from "@/services/api/api.server";
 import { Categoria, FaturasAgrupadas, Transacao } from "@/types";
@@ -48,6 +49,8 @@ export default async function Faturas() {
           MEU GERENCIADOR DE FATURAS
         </h1>
       </div>
+
+      <FaturasActions />
 
       <div className="mb-8">
         <FormularioTransacao categorias={categorias} />
